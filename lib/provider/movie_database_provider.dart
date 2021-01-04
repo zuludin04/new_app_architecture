@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:new_app_architecture/model/movie_entity.dart';
 import 'package:new_app_architecture/model/movie_favorite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -9,6 +10,7 @@ class MovieDatabaseProvider {
   static Database _database;
 
   static final _movieTable = 'movie_table';
+  static final _cacheTable = 'cache_table';
 
   MovieDatabaseProvider._createDatabase();
 
@@ -31,6 +33,11 @@ class MovieDatabaseProvider {
   void _onCreateDb(Database db, int version) async {
     await db.execute(
         'CREATE TABLE $_movieTable (id INTEGER PRIMARY KEY AUTOINCREMENT, '
+        'title TEXT, '
+        'thumbnail TEXT, '
+        'movieId INTEGER)');
+    await db.execute(
+        'CREATE TABLE $_cacheTable (id INTEGER PRIMARY KEY AUTOINCREMENT, '
         'title TEXT, '
         'thumbnail TEXT, '
         'movieId INTEGER)');
@@ -75,5 +82,25 @@ class MovieDatabaseProvider {
     } else {
       return true;
     }
+  }
+
+  Future<List<MovieEntity>> loadMovieCache() async {
+    Database db = await database;
+    List<Map<String, dynamic>> result =
+        await db.rawQuery('SELECT * FROM $_cacheTable');
+    List<MovieEntity> movies =
+        result.map((e) => MovieEntity.fromMap(e)).toList();
+    return movies;
+  }
+
+  Future addSavedMovies(List<MovieEntity> movies) async {
+    Database db = await database;
+    Batch batch = db.batch();
+
+    movies.forEach((movie) {
+      batch.insert(_cacheTable, movie.toMap());
+    });
+
+    batch.commit();
   }
 }

@@ -1,5 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app_architecture/model/popular_movie_response.dart';
+import 'package:new_app_architecture/domain/movie.dart';
 import 'package:new_app_architecture/ui/detail/movie_detail_screen.dart';
 import 'package:new_app_architecture/ui/detail/viewmodel/movie_detail_viewmodel.dart';
 import 'package:new_app_architecture/ui/favorite/movie_favorite_screen.dart';
@@ -44,7 +45,7 @@ class PopularMoviesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMovieItem(BuildContext context, MovieResults movie) {
+  Widget _buildMovieItem(BuildContext context, Movie movie) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -60,8 +61,8 @@ class PopularMoviesScreen extends StatelessWidget {
         child: Container(
           child: Column(
             children: [
-              Image.network(
-                'https://image.tmdb.org/t/p/original${movie.backdropPath}',
+              CachedNetworkImage(
+                imageUrl: 'https://image.tmdb.org/t/p/original${movie.background}',
                 width: double.infinity,
                 height: 180,
                 fit: BoxFit.cover,
