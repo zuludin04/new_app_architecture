@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:new_app_architecture/model/movie_entity.dart';
-import 'package:new_app_architecture/model/movie_favorite.dart';
+import 'package:new_app_architecture/data/model/movie_entity.dart';
+import 'package:new_app_architecture/data/model/movie_favorite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 

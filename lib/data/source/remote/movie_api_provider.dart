@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:new_app_architecture/model/detail_movie_response.dart';
-import 'package:new_app_architecture/model/error/no_internet_model.dart';
-import 'package:new_app_architecture/model/popular_movie_response.dart';
 import 'package:new_app_architecture/core/logging_interceptor.dart';
+import 'package:new_app_architecture/data/model/detail_movie_response.dart';
+import 'package:new_app_architecture/data/model/error/no_internet_model.dart';
+import 'package:new_app_architecture/data/model/popular_movie_response.dart';
 
 class MovieApiProvider {
   Dio get dio => _dio();

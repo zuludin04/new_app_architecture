@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:new_app_architecture/model/movie_favorite.dart';
+import 'package:new_app_architecture/data/model/movie_favorite.dart';
 import 'package:new_app_architecture/ui/detail/movie_detail_screen.dart';
 import 'package:new_app_architecture/ui/detail/viewmodel/movie_detail_viewmodel.dart';
 import 'package:new_app_architecture/ui/favorite/viewmodel/movie_favorite_viewmodel.dart';

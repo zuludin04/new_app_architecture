@@ -1,9 +1,9 @@
 import 'package:new_app_architecture/core/base/base_viewmodel.dart';
+import 'package:new_app_architecture/data/app_repository.dart';
 import 'package:new_app_architecture/domain/movie.dart';
-import 'package:new_app_architecture/service/movie_service.dart';
 
 class PopularMovieVieWModel extends BaseViewModel {
-  MovieService _movieService = MovieService();
+  final _repository = AppRepositoryImpl();
 
   List<Movie> _movies = [];
 
@@ -12,7 +12,7 @@ class PopularMovieVieWModel extends BaseViewModel {
   void loadMoviePopular() async {
     showLoading(true);
 
-    var movies = await _movieService.getPopularMovie();
+    var movies = await _repository.getPopularMovie();
     movies.fold(
       (l) => print(l.message),
       (r) => _movies.addAll(r),

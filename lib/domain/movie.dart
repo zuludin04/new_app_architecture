@@ -1,5 +1,5 @@
-import 'package:new_app_architecture/model/movie_entity.dart';
-import 'package:new_app_architecture/model/popular_movie_response.dart';
+import 'package:new_app_architecture/data/model/movie_entity.dart';
+import 'package:new_app_architecture/data/model/popular_movie_response.dart';
 
 class Movie {
   int id;
