@@ -51,7 +51,6 @@ class AppRepositoryImpl extends AppRepository {
   Future<Either<ErrorResponse, List<Movie>>> getPopularMovie() async {
     try {
       var result = await _apiProvider.loadPopularMovie();
-      _addMovieToDatabase(result.results);
       var movies = result.results.map((e) => Movie.fromResponse(e)).toList();
       return Right(movies);
     } catch (e) {

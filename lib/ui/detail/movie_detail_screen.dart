@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_app_architecture/data/model/detail_movie_response.dart';
-import 'package:new_app_architecture/ui/detail/viewmodel/movie_detail_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:new_app_architecture/ui/detail/bloc/movie_detail_bloc.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int movieId;
@@ -13,32 +13,16 @@ class MovieDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Movie'),
-        actions: [
-          // todo create wrapper for multiple change state
-          ChangeNotifierProvider.value(
-            value: Provider.of<MovieDetailViewModel>(context, listen: true),
-            child: Consumer<MovieDetailViewModel>(
-              builder: (context, model, child) {
-                return IconButton(
-                  icon: Icon(model.movieFavorite
-                      ? Icons.favorite
-                      : Icons.favorite_border),
-                  onPressed: () {
-                    model.addDeleteMovie(movieId);
-                    Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text(model.updateMessage)));
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+        // actions: [FavoriteButton(movieId)],
       ),
-      body: Consumer<MovieDetailViewModel>(
-        builder: (context, model, child) {
-          if (model.isLoading) return CircularProgressIndicator();
-          return _buildDetailLayout(model.detailMovie);
-        },
+      body: Center(
+        child: BlocBuilder<MovieDetailBloc, MovieDetailState>(
+          builder: (context, state) {
+            if (state is ShowDetailMovie)
+              return _buildDetailLayout(state.detailMovie);
+            return CircularProgressIndicator();
+          },
+        ),
       ),
     );
   }

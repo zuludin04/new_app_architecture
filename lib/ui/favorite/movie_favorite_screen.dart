@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_app_architecture/data/model/movie_favorite.dart';
+import 'package:new_app_architecture/ui/detail/bloc/movie_detail_bloc.dart';
 import 'package:new_app_architecture/ui/detail/movie_detail_screen.dart';
-import 'package:new_app_architecture/ui/detail/viewmodel/movie_detail_viewmodel.dart';
-import 'package:new_app_architecture/ui/favorite/viewmodel/movie_favorite_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:new_app_architecture/ui/favorite/bloc/movie_favorite_bloc.dart';
 
 class MovieFavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Favorite Movie'),
-      ),
+      appBar: AppBar(title: Text('Favorite Movie')),
       body: Center(
-        child: Consumer<MovieFavoriteViewModel>(
-          builder: (context, model, child) {
-            if (model.isLoading) return CircularProgressIndicator();
-            if (model.favorites.isEmpty) return Text('Favorite Movie is Empty');
-            return ListView.builder(
-              itemBuilder: (context, index) =>
-                  _favoriteItem(context, model.favorites[index]),
-              itemCount: model.favorites.length,
-            );
+        child: BlocBuilder<MovieFavoriteBloc, MovieFavoriteState>(
+          builder: (context, state) {
+            if (state is EmptyFavorite) return Text('Favorite Movie is Empty');
+            if (state is ShowFavoriteMovie)
+              return ListView.builder(
+                itemBuilder: (context, index) =>
+                    _favoriteItem(context, state.movies[index]),
+                itemCount: state.movies.length,
+              );
+            return CircularProgressIndicator();
           },
         ),
       ),
@@ -32,10 +31,10 @@ class MovieFavoriteScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return ChangeNotifierProvider<MovieDetailViewModel>(
+          return BlocProvider<MovieDetailBloc>(
             create: (context) =>
-                MovieDetailViewModel()..loadDetailMovie(favorite.movieId),
-            child: MovieDetailScreen(movieId: favorite.movieId),
+                MovieDetailBloc()..add(LoadDetailMovie(favorite.id)),
+            child: MovieDetailScreen(movieId: favorite.id),
           );
         }));
       },

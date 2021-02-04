@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_app_architecture/domain/movie.dart';
+import 'package:new_app_architecture/ui/detail/bloc/movie_detail_bloc.dart';
 import 'package:new_app_architecture/ui/detail/movie_detail_screen.dart';
-import 'package:new_app_architecture/ui/detail/viewmodel/movie_detail_viewmodel.dart';
+import 'package:new_app_architecture/ui/favorite/bloc/movie_favorite_bloc.dart'
+    as fav;
 import 'package:new_app_architecture/ui/favorite/movie_favorite_screen.dart';
-import 'package:new_app_architecture/ui/favorite/viewmodel/movie_favorite_viewmodel.dart';
-import 'package:new_app_architecture/ui/popular/viewmodel/popular_movie_viewmodel.dart';
-import 'package:provider/provider.dart';
+import 'package:new_app_architecture/ui/popular/bloc/popular_movies_bloc.dart';
 
 class PopularMoviesScreen extends StatelessWidget {
   @override
@@ -19,9 +20,9 @@ class PopularMoviesScreen extends StatelessWidget {
             icon: Icon(Icons.favorite),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return ChangeNotifierProvider<MovieFavoriteViewModel>(
+                return BlocProvider<fav.MovieFavoriteBloc>(
                   create: (context) =>
-                      MovieFavoriteViewModel()..loadFavorites(),
+                      fav.MovieFavoriteBloc()..add(fav.LoadFavoriteMovie()),
                   child: MovieFavoriteScreen(),
                 );
               }));
@@ -30,15 +31,16 @@ class PopularMoviesScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: Consumer<PopularMovieVieWModel>(
-          builder: (context, model, child) {
-            if (model.isLoading) return CircularProgressIndicator();
-            if (model.movies.isEmpty) return Text('Movie is Empty');
-            return ListView.builder(
-              itemBuilder: (context, index) =>
-                  _buildMovieItem(context, model.movies[index]),
-              itemCount: model.movies.length,
-            );
+        child: BlocBuilder<PopularMoviesBloc, PopularMoviesState>(
+          builder: (context, state) {
+            if (state is ShowErrorMessage) return Text(state.message);
+            if (state is ShowPopularMovies)
+              return ListView.builder(
+                itemBuilder: (context, index) =>
+                    _buildMovieItem(context, state.movies[index]),
+                itemCount: state.movies.length,
+              );
+            return CircularProgressIndicator();
           },
         ),
       ),
@@ -49,9 +51,9 @@ class PopularMoviesScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return ChangeNotifierProvider<MovieDetailViewModel>(
+          return BlocProvider<MovieDetailBloc>(
             create: (context) =>
-                MovieDetailViewModel()..loadDetailMovie(movie.id),
+                MovieDetailBloc()..add(LoadDetailMovie(movie.id)),
             child: MovieDetailScreen(movieId: movie.id),
           );
         }));
@@ -62,7 +64,8 @@ class PopularMoviesScreen extends StatelessWidget {
           child: Column(
             children: [
               CachedNetworkImage(
-                imageUrl: 'https://image.tmdb.org/t/p/original${movie.background}',
+                imageUrl:
+                    'https://image.tmdb.org/t/p/original${movie.background}',
                 width: double.infinity,
                 height: 180,
                 fit: BoxFit.cover,
