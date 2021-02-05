@@ -1,8 +1,6 @@
 part of 'movie_favorite_bloc.dart';
 
-abstract class MovieFavoriteEvent extends Equatable {
-  @override
-  List<Object> get props => [];
+@freezed
+abstract class MovieFavoriteEvent with _$MovieFavoriteEvent {
+  const factory MovieFavoriteEvent.loadFavoriteMovie() = LoadFavoriteMovie;
 }
-
-class LoadFavoriteMovie extends MovieFavoriteEvent {}

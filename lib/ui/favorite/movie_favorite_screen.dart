@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:new_app_architecture/core/constant.dart';
 import 'package:new_app_architecture/data/model/movie_favorite.dart';
-import 'package:new_app_architecture/ui/detail/bloc/movie_detail_bloc.dart';
-import 'package:new_app_architecture/ui/detail/movie_detail_screen.dart';
 import 'package:new_app_architecture/ui/favorite/bloc/movie_favorite_bloc.dart';
 
 class MovieFavoriteScreen extends StatelessWidget {
@@ -13,14 +12,15 @@ class MovieFavoriteScreen extends StatelessWidget {
       body: Center(
         child: BlocBuilder<MovieFavoriteBloc, MovieFavoriteState>(
           builder: (context, state) {
-            if (state is EmptyFavorite) return Text('Favorite Movie is Empty');
-            if (state is ShowFavoriteMovie)
-              return ListView.builder(
+            return state.map(
+              initial: (_) => CircularProgressIndicator(),
+              showFavoriteMovie: (favorite) => ListView.builder(
                 itemBuilder: (context, index) =>
-                    _favoriteItem(context, state.movies[index]),
-                itemCount: state.movies.length,
-              );
-            return CircularProgressIndicator();
+                    _favoriteItem(context, favorite.movies[index]),
+                itemCount: favorite.movies.length,
+              ),
+              emptyFavorite: (message) => Text('Favorite Movie is Empty'),
+            );
           },
         ),
       ),
@@ -30,13 +30,7 @@ class MovieFavoriteScreen extends StatelessWidget {
   Widget _favoriteItem(BuildContext context, MovieFavorite favorite) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return BlocProvider<MovieDetailBloc>(
-            create: (context) =>
-                MovieDetailBloc()..add(LoadDetailMovie(favorite.id)),
-            child: MovieDetailScreen(movieId: favorite.id),
-          );
-        }));
+        Navigator.pushNamed(context, DetailMovie, arguments: favorite.movieId);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

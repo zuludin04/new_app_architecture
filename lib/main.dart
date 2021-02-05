@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:new_app_architecture/ui/popular/bloc/popular_movies_bloc.dart';
-import 'package:new_app_architecture/ui/popular/popular_movies_screen.dart';
+import 'package:new_app_architecture/core/constant.dart';
+import 'package:new_app_architecture/ui/router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,10 +16,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BlocProvider<PopularMoviesBloc>(
-        create: (context) => PopularMoviesBloc()..add(LoadPopularMovies()),
-        child: PopularMoviesScreen(),
-      ),
+      onGenerateRoute: generateRoute,
+      initialRoute: MoviePopular,
     );
   }
 }

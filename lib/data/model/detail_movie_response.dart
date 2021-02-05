@@ -22,40 +22,39 @@ class DetailMovieResponse {
   String tagline;
   String title;
   bool video;
-  double voteAverage;
-  int voteCount;
 
   DetailMovieResponse({
-      this.adult, 
-      this.backdropPath, 
-      this.belongsToCollection, 
-      this.budget, 
-      this.genres, 
-      this.homepage, 
-      this.id, 
-      this.imdbId, 
-      this.originalLanguage, 
-      this.originalTitle, 
-      this.overview, 
-      this.popularity, 
-      this.posterPath, 
-      this.productionCompanies, 
-      this.productionCountries, 
-      this.releaseDate, 
-      this.revenue, 
-      this.runtime, 
-      this.spokenLanguages, 
-      this.status, 
-      this.tagline, 
-      this.title, 
-      this.video, 
-      this.voteAverage, 
-      this.voteCount});
+    this.adult,
+    this.backdropPath,
+    this.belongsToCollection,
+    this.budget,
+    this.genres,
+    this.homepage,
+    this.id,
+    this.imdbId,
+    this.originalLanguage,
+    this.originalTitle,
+    this.overview,
+    this.popularity,
+    this.posterPath,
+    this.productionCompanies,
+    this.productionCountries,
+    this.releaseDate,
+    this.revenue,
+    this.runtime,
+    this.spokenLanguages,
+    this.status,
+    this.tagline,
+    this.title,
+    this.video,
+  });
 
   DetailMovieResponse.fromJson(dynamic json) {
     adult = json["adult"];
     backdropPath = json["backdrop_path"];
-    belongsToCollection = json["belongs_to_collection"] != null ? BelongsToCollection.fromJson(json["belongsToCollection"]) : null;
+    belongsToCollection = json["belongs_to_collection"] != null
+        ? BelongsToCollection.fromJson(json["belongsToCollection"])
+        : null;
     budget = json["budget"];
     if (json["genres"] != null) {
       genres = [];
@@ -96,8 +95,6 @@ class DetailMovieResponse {
     tagline = json["tagline"];
     title = json["title"];
     video = json["video"];
-    voteAverage = json["vote_average"];
-    voteCount = json["vote_count"];
   }
 
   Map<String, dynamic> toJson() {
@@ -120,10 +117,12 @@ class DetailMovieResponse {
     map["popularity"] = popularity;
     map["poster_path"] = posterPath;
     if (productionCompanies != null) {
-      map["production_companies"] = productionCompanies.map((v) => v.toJson()).toList();
+      map["production_companies"] =
+          productionCompanies.map((v) => v.toJson()).toList();
     }
     if (productionCountries != null) {
-      map["production_countries"] = productionCountries.map((v) => v.toJson()).toList();
+      map["production_countries"] =
+          productionCountries.map((v) => v.toJson()).toList();
     }
     map["release_date"] = releaseDate;
     map["revenue"] = revenue;
@@ -135,11 +134,8 @@ class DetailMovieResponse {
     map["tagline"] = tagline;
     map["title"] = title;
     map["video"] = video;
-    map["vote_average"] = voteAverage;
-    map["vote_count"] = voteCount;
     return map;
   }
-
 }
 
 class SpokenLanguages {
@@ -147,10 +143,7 @@ class SpokenLanguages {
   String iso6391;
   String name;
 
-  SpokenLanguages({
-      this.englishName, 
-      this.iso6391, 
-      this.name});
+  SpokenLanguages({this.englishName, this.iso6391, this.name});
 
   SpokenLanguages.fromJson(dynamic json) {
     englishName = json["english_name"];
@@ -165,16 +158,13 @@ class SpokenLanguages {
     map["name"] = name;
     return map;
   }
-
 }
 
 class ProductionCountries {
   String iso31661;
   String name;
 
-  ProductionCountries({
-      this.iso31661, 
-      this.name});
+  ProductionCountries({this.iso31661, this.name});
 
   ProductionCountries.fromJson(dynamic json) {
     iso31661 = json["iso_3166_1"];
@@ -187,7 +177,6 @@ class ProductionCountries {
     map["name"] = name;
     return map;
   }
-
 }
 
 class ProductionCompanies {
@@ -196,11 +185,7 @@ class ProductionCompanies {
   String name;
   String originCountry;
 
-  ProductionCompanies({
-      this.id, 
-      this.logoPath, 
-      this.name, 
-      this.originCountry});
+  ProductionCompanies({this.id, this.logoPath, this.name, this.originCountry});
 
   ProductionCompanies.fromJson(dynamic json) {
     id = json["id"];
@@ -217,16 +202,13 @@ class ProductionCompanies {
     map["origin_country"] = originCountry;
     return map;
   }
-
 }
 
 class Genres {
   int id;
   String name;
 
-  Genres({
-      this.id, 
-      this.name});
+  Genres({this.id, this.name});
 
   Genres.fromJson(dynamic json) {
     id = json["id"];
@@ -239,7 +221,6 @@ class Genres {
     map["name"] = name;
     return map;
   }
-
 }
 
 class BelongsToCollection {
@@ -248,11 +229,7 @@ class BelongsToCollection {
   String posterPath;
   String backdropPath;
 
-  BelongsToCollection({
-      this.id, 
-      this.name, 
-      this.posterPath, 
-      this.backdropPath});
+  BelongsToCollection({this.id, this.name, this.posterPath, this.backdropPath});
 
   BelongsToCollection.fromJson(dynamic json) {
     id = json["id"];
@@ -269,5 +246,4 @@ class BelongsToCollection {
     map["backdrop_path"] = backdropPath;
     return map;
   }
-
 }

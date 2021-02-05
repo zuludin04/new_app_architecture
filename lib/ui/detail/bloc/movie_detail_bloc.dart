@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:new_app_architecture/data/app_repository.dart';
 import 'package:new_app_architecture/data/model/detail_movie_response.dart';
 import 'package:new_app_architecture/data/model/movie_favorite.dart';
+
+part 'movie_detail_bloc.freezed.dart';
 
 part 'movie_detail_event.dart';
 
@@ -14,7 +16,7 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
   final _repository = AppRepositoryImpl();
   DetailMovieResponse _detailMovie = DetailMovieResponse();
 
-  MovieDetailBloc() : super(MovieDetailInitial());
+  MovieDetailBloc() : super(MovieDetailState.initial());
 
   @override
   Stream<MovieDetailState> mapEventToState(
@@ -23,10 +25,10 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
     if (event is LoadDetailMovie) {
       var result = await _repository.getDetailMovie(event.movieId);
       yield result.fold(
-        (l) => ErrorMovieDetail(),
+        (l) => MovieDetailState.errorMovieDetail(),
         (r) {
           _detailMovie = r;
-          return ShowDetailMovie(r);
+          return MovieDetailState.showDetailMovie(r);
         },
       );
     } else if (event is AddFavoriteMovie) {
@@ -36,20 +38,20 @@ class MovieDetailBloc extends Bloc<MovieDetailEvent, MovieDetailState> {
           movieId: _detailMovie.id);
       var result = await _repository.insertFavoriteMovie(favorite);
       if (result > 0) {
-        yield UpdateFavoriteStatus('Movie is Inserted to Favorite');
+        yield MovieDetailState.updateStatus('Movie is Inserted to Favorite');
       } else {
-        yield UpdateFavoriteStatus('Can\'t Insert Movie to Database');
+        yield MovieDetailState.updateStatus('Can\'t Insert Movie to Database');
       }
     } else if (event is RemoveFavoriteMovie) {
       var result = await _repository.deleteFavoriteMovie(event.movieId);
       if (result > 0) {
-        yield UpdateFavoriteStatus('Movie is no Longer Favorite');
+        yield MovieDetailState.updateStatus('Movie is no Longer Favorite');
       } else {
-        yield UpdateFavoriteStatus('Can\'t Delete Movie');
+        yield MovieDetailState.updateStatus('Can\'t Delete Movie');
       }
     } else if (event is CheckIfMovieFavorite) {
       var result = await _repository.checkFavoriteMovie(event.movieId);
-      yield IsMovieFavorite(result);
+      yield MovieDetailState.isMovieFavorite(result);
     }
   }
 }

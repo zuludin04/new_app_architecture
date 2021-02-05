@@ -1,12 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:new_app_architecture/core/constant.dart';
 import 'package:new_app_architecture/domain/movie.dart';
-import 'package:new_app_architecture/ui/detail/bloc/movie_detail_bloc.dart';
-import 'package:new_app_architecture/ui/detail/movie_detail_screen.dart';
-import 'package:new_app_architecture/ui/favorite/bloc/movie_favorite_bloc.dart'
-    as fav;
-import 'package:new_app_architecture/ui/favorite/movie_favorite_screen.dart';
 import 'package:new_app_architecture/ui/popular/bloc/popular_movies_bloc.dart';
 
 class PopularMoviesScreen extends StatelessWidget {
@@ -19,13 +15,7 @@ class PopularMoviesScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.favorite),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return BlocProvider<fav.MovieFavoriteBloc>(
-                  create: (context) =>
-                      fav.MovieFavoriteBloc()..add(fav.LoadFavoriteMovie()),
-                  child: MovieFavoriteScreen(),
-                );
-              }));
+              Navigator.pushNamed(context, FavoriteMovie);
             },
           ),
         ],
@@ -33,14 +23,15 @@ class PopularMoviesScreen extends StatelessWidget {
       body: Center(
         child: BlocBuilder<PopularMoviesBloc, PopularMoviesState>(
           builder: (context, state) {
-            if (state is ShowErrorMessage) return Text(state.message);
-            if (state is ShowPopularMovies)
-              return ListView.builder(
+            return state.map(
+              initial: (_) => CircularProgressIndicator(),
+              showPopularMovies: (movies) => ListView.builder(
                 itemBuilder: (context, index) =>
-                    _buildMovieItem(context, state.movies[index]),
-                itemCount: state.movies.length,
-              );
-            return CircularProgressIndicator();
+                    _buildMovieItem(context, movies.movies[index]),
+                itemCount: movies.movies.length,
+              ),
+              showErrorMessage: (message) => Text(message.message),
+            );
           },
         ),
       ),
@@ -50,13 +41,7 @@ class PopularMoviesScreen extends StatelessWidget {
   Widget _buildMovieItem(BuildContext context, Movie movie) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return BlocProvider<MovieDetailBloc>(
-            create: (context) =>
-                MovieDetailBloc()..add(LoadDetailMovie(movie.id)),
-            child: MovieDetailScreen(movieId: movie.id),
-          );
-        }));
+        Navigator.pushNamed(context, DetailMovie, arguments: movie.id);
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

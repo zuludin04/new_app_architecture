@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_app_architecture/data/model/detail_movie_response.dart';
 import 'package:new_app_architecture/ui/detail/bloc/movie_detail_bloc.dart';
+import 'package:new_app_architecture/ui/detail/widget/favorite_button.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int movieId;
@@ -13,14 +14,16 @@ class MovieDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Movie'),
-        // actions: [FavoriteButton(movieId)],
+        actions: [FavoriteButton(movieId)],
       ),
       body: Center(
         child: BlocBuilder<MovieDetailBloc, MovieDetailState>(
           builder: (context, state) {
-            if (state is ShowDetailMovie)
-              return _buildDetailLayout(state.detailMovie);
-            return CircularProgressIndicator();
+            return state.maybeMap(
+              showDetailMovie: (detail) => _buildDetailLayout(detail.detailMovie),
+              initial: (_) => CircularProgressIndicator(),
+              orElse: () => Container(),
+            );
           },
         ),
       ),

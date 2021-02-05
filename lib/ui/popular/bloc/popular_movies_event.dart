@@ -1,8 +1,6 @@
 part of 'popular_movies_bloc.dart';
 
-abstract class PopularMoviesEvent extends Equatable {
-  @override
-  List<Object> get props => [];
+@freezed
+abstract class PopularMoviesEvent with _$PopularMoviesEvent {
+  const factory PopularMoviesEvent.loadPopularMovies() = LoadPopularMovies;
 }
-
-class LoadPopularMovies extends PopularMoviesEvent {}

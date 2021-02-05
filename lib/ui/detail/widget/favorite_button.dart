@@ -20,10 +20,10 @@ class FavoriteButton extends StatelessWidget {
                   Icon(state.favorite ? Icons.favorite : Icons.favorite_border),
               onPressed: () {
                 if (state.favorite) {
-                  context.watch<MovieDetailBloc>()
+                  context.read<MovieDetailBloc>()
                     ..add(RemoveFavoriteMovie(movieId));
                 } else {
-                  context.watch<MovieDetailBloc>()..add(AddFavoriteMovie());
+                  context.read<MovieDetailBloc>()..add(AddFavoriteMovie());
                 }
               },
             );
